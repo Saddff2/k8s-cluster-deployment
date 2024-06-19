@@ -1,0 +1,47 @@
+### Add the Helm Repositories
+**First, add the Helm repositories for Prometheus and Grafana.**
+
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+```
+
+
+### Install Prometheus
+Create a namespace for Prometheus:
+
+```
+kubectl create namespace monitoring
+```
+
+Install Prometheus on namespace
+
+helm install prometheus prometheus-community/prometheus --namespace monitoring
+
+### Install Grafana
+Install the Grafana chart in the same namespace:
+
+```
+helm install grafana grafana/grafana --namespace monitoring
+```
+
+### 4. Access Grafana
+
+To access the Grafana dashboard, you can use port forwarding:
+
+```
+kubectl port-forward --namespace monitoring svc/grafana 3000:80
+```
+
+### 5. Get your Grafana password
+
+```
+kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
+
+
+
+
+kubectl create secret generic grafana-admin-secret --from-file=admin-password.txt -n monitoring

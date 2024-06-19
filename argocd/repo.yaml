@@ -1,0 +1,10 @@
+apiVersion: v1alpha1
+kind: Repository
+metadata:
+  name: gitlab-repo
+spec:
+  repo: git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/infrastructure/argocd.git
+  type: git
+  sshPrivateKeySecret:
+    name: gitlab-ssh-secret
+    key: sshPrivateKey

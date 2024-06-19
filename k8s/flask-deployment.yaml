@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: flask-app
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: flask-app
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: saddff/flask_app:0.2amd64
+          image: saddff/flask_app:0.5amd64
           ports:
             - containerPort: 5000
           env:
@@ -24,11 +24,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-app
+  name: flask-app-service
 spec:
   selector:
     app: flask-app
   ports:
     - protocol: TCP
-      port: 80
+      port: 5006
       targetPort: 5000
+  type: LoadBalancer
+  sessionAffinity: None
