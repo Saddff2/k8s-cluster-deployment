@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ .Values.mongo.name }}
+  namespace: {{ .Release.Namespace}}
 spec:
   serviceName: {{ .Values.mongo.name }}
   replicas: 1
@@ -33,6 +34,7 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: {{ .Values.mongo.name }}-pv-claim
+        namespace: {{ .Release.Namespace}}
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:
