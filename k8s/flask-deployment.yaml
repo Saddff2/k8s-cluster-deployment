@@ -14,23 +14,9 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: saddff/flask_app:0.5amd64
+          image: saddff/flask_app:0.6amd64
           ports:
             - containerPort: 5000
           env:
             - name: MONGO_URI
               value: "mongodb://mongo:27017/dinner_suggestions"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: flask-app-service
-spec:
-  selector:
-    app: flask-app
-  ports:
-    - protocol: TCP
-      port: 5006
-      targetPort: 5000
-  type: LoadBalancer
-  sessionAffinity: None

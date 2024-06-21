@@ -1,8 +1,9 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mongo
 spec:
+  serviceName: mongo
   replicas: 1
   selector:
     matchLabels:
@@ -22,15 +23,18 @@ spec:
               value: root
             - name: MONGO_INITDB_ROOT_PASSWORD
               value: example
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongo
-spec:
-  selector:
-    app: mongo
-  ports:
-    - protocol: TCP
-      port: 27017
-      targetPort: 27017
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: mongo-pv-claim
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-pv-claim
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

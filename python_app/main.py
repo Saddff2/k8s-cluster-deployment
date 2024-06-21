@@ -54,7 +54,7 @@ def index():
         'datetime': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     }
     
-    return render_template('index.html', main=main, side=side, dessert=dish_count, info=pod_info)
+    return render_template('index.html', main=main, side=side, dessert=dessert,dish_count=dish_count, info=pod_info)
 
 @app.route('/refresh')
 def refresh():
