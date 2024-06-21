@@ -146,14 +146,6 @@ spec:
               mountPropagation: {{ . }}
               {{- end }}
               readOnly: true
-            {{- if .Values.hostRootFsMount.enabled }}
-            - name: root
-              mountPath: /host/root
-              {{- with .Values.hostRootFsMount.mountPropagation }}
-              mountPropagation: {{ . }}
-              {{- end }}
-              readOnly: true
-            {{- end }}
             {{- range $_, $mount := .Values.extraHostVolumeMounts }}
             - name: {{ $mount.name }}
               mountPath: {{ $mount.mountPath }}
@@ -271,11 +263,6 @@ spec:
         - name: sys
           hostPath:
             path: /sys
-        {{- if .Values.hostRootFsMount.enabled }}
-        - name: root
-          hostPath:
-            path: /
-        {{- end }}
         {{- range $_, $mount := .Values.extraHostVolumeMounts }}
         - name: {{ $mount.name }}
           hostPath:

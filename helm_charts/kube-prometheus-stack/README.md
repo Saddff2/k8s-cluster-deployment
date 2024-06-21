@@ -6,17 +6,14 @@ helm pull prometheus-community/kube-prometheus-stack
 
 kubectl edit daemonset kube-prometheus-stack-prometheus-node-exporter -n kube-prometheus-stack
 
-DELETE THIS 
-# ... other container fields ...
-volumeMounts:
-- name: proc
-  mountPath: /host/proc
+DELETE THIS IN charts/prometheus-node-exporter/templates/daemonset.yaml
+
+
+{{- if .Values.hostRootFsMount.enabled }}
+- name: root
+  mountPath: /host/root
+  {{- with .Values.hostRootFsMount.mountPropagation }}
+  mountPropagation: {{ . }}
+  {{- end }}
   readOnly: true
-- name: sys
-  mountPath: /host/sys
-  readOnly: true
-# REMOVE THIS:
-#- name: root
-#  mountPath: /host/root
-#  readOnly: true 
-# ... other container fields ...
+{{- end }}
