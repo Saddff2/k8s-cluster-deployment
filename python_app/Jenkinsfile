@@ -3,7 +3,7 @@ pipeline {
         kubernetes{
             label 'dind'
         }   
-    }
+    }stages{
         stage('Clone repository') {
             checkout scm
         }
@@ -25,3 +25,4 @@ pipeline {
             }
         }
     }
+}
