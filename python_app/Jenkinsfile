@@ -1,56 +1,14 @@
 pipeline {
     agent {
-        kubernetes {
-            // Use a predefined Kubernetes pod template with Docker installed
-            yaml """
-            apiVersion: v1
-            kind: Pod
-            metadata:
-              labels:
-                jenkins: slave
-                jenkins/label-digest: 7cd15bf1a9b56a9dfd3e295aa5ac3496b91d3120
-            spec:
-              containers:
-              - name: docker
-                image: docker:20.10.10
-                command:
-                - cat
-                tty: true
-                volumeMounts:
-                - mountPath: /var/run/docker.sock
-                  name: docker-socket
-              volumes:
-              - name: docker-socket
-                hostPath:
-                  path: /var/run/docker.sock
-            """
+        docker {
+            image 'jenkins/agent:latest'
+            label 'docker-agent'
         }
     }
     stages {
-        stage('Checkout SCM') {
+        stage('Build') {
             steps {
-                checkout scm
-            }
-        }
-        stage('Build image') {
-            steps {
-                script {
-                    sh 'docker build -t saddff/flask_app:0111 --platform linux/amd64 .'
-                }
-            }
-        }
-        stage('Test image') {
-            steps {
-                script {
-                    sh 'echo "Tests passed"'
-                }
-            }
-        }
-        stage('Push image') {
-            steps {
-                script {
-                    sh 'docker push saddff/flask_app:0111'
-                }
+                sh 'docker ps'
             }
         }
     }
