@@ -1,5 +1,9 @@
 pipeline {
-    agent dind {   
+    agent {
+        kubernetes{
+            label 'dind'
+        }   
+    }
         stage('Clone repository') {
             checkout scm
         }
@@ -21,4 +25,3 @@ pipeline {
             }
         }
     }
-}
