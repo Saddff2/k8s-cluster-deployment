@@ -1,16 +1,37 @@
 pipeline {
     agent {
         kubernetes {
-            label 'dind'
+            // Use a predefined Kubernetes pod template with Docker installed
+            yaml """
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              labels:
+                jenkins: slave
+                jenkins/label-digest: 7cd15bf1a9b56a9dfd3e295aa5ac3496b91d3120
+            spec:
+              containers:
+              - name: docker
+                image: docker:20.10.10
+                command:
+                - cat
+                tty: true
+                volumeMounts:
+                - mountPath: /var/run/docker.sock
+                  name: docker-socket
+              volumes:
+              - name: docker-socket
+                hostPath:
+                  path: /var/run/docker.sock
+            """
         }
     }
     stages {
-        stage('Clone repository') {
+        stage('Checkout SCM') {
             steps {
                 checkout scm
             }
         }
-
         stage('Build image') {
             steps {
                 script {
@@ -18,24 +39,17 @@ pipeline {
                 }
             }
         }
-
         stage('Test image') {
             steps {
                 script {
-                    app.inside {
-                        sh 'echo "Tests passed"'
-                    }
+                    sh 'echo "Tests passed"'
                 }
             }
         }
-
         stage('Push image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
+                    sh 'docker push saddff/flask_app:0111'
                 }
             }
         }
