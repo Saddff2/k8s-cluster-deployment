@@ -14,7 +14,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    sh docker build -t saddff/flask_app:0111 --platform linux/amd64 .
+                    sh 'docker build -t saddff/flask_app:0111 --platform linux/amd64 .'
                 }
             }
         }
