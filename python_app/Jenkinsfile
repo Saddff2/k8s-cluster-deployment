@@ -1,12 +1,15 @@
 pipeline {
-    agent any 
-    stages{
+    agent any
+    stages {
         stage('Clone repository') {
-            checkout scm
+            steps {
+                checkout scm
+            }
         }
-
         stage('Build image') {
-            sh 'docker ps'
+            steps {
+                sh 'docker ps'
+            }
         }
     }
 }
