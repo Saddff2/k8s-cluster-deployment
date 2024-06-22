@@ -1,9 +1,6 @@
 pipeline {
-    agent {
-        kubernetes{
-            label 'dind'
-        }   
-    }stages{
+    agent default 
+    stages{
         stage('Clone repository') {
             checkout scm
         }
