@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: in-cluster
+    namespace: kube-prometheus-stack
+  source:
+    repoURL: "git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/infrastructure.git"
+    path: "helm_charts/kube-prometheus-stack"
+    targetRevision: dev
+    helm:
+      valueFiles:
+        - values.yaml
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
