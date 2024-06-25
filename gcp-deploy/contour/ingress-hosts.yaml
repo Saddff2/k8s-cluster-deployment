@@ -7,18 +7,21 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: daniel.local
+    - host: flask.local
       http:
         paths:
-          - path: /flask
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: flask-service
                 namespace: flask-app
                 port:
-                  number: 5000
-          - path: /jenkins
+                  number: 5006
+    - host: jenkins.local
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -26,7 +29,10 @@ spec:
                 namespace: jenkins
                 port:
                   number: 8080
-          - path: /grafana
+    - host: grafana.local
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -34,7 +40,10 @@ spec:
                 namespace: kube-prometheus-stack
                 port:
                   number: 80
-          - path: /prometheus
+    - host: prometheus.local
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -42,7 +51,10 @@ spec:
                 namespace: kube-prometheus-stack
                 port:
                   number: 9090
-          - path: /argocd
+    - host: argocd.local
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
