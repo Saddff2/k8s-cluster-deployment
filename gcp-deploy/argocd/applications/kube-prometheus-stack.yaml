@@ -11,7 +11,7 @@ spec:
     namespace: kube-prometheus-stack
   source:
     repoURL: "git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/infrastructure.git"
-    path: "helm_charts/kube-prometheus-stack"
+    path: "gcp-deploy/kube-prometheus-stack"
     targetRevision: dev
     helm:
       valueFiles:

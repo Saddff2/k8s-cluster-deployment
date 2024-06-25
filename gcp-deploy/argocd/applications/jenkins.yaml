@@ -11,7 +11,7 @@ spec:
     namespace: jenkins
   source:
     repoURL: "git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/infrastructure.git"
-    path: "helm_charts/jenkins"
+    path: "gcp-deploy/jenkins"
     targetRevision: dev
     helm:
       valueFiles:
