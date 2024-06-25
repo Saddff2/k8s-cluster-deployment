@@ -6,8 +6,8 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    #- host: daniel.local
-    -  http:
+    - host: tsorefdaniel.42web.io
+      http:
         paths:
           - path: /jenkins
             pathType: Prefix
