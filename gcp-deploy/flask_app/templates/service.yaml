@@ -8,7 +8,7 @@ spec:
     app: {{ .Release.Name }}
   ports:
     - protocol: TCP
-      port: 5006
+      port: 5000
       targetPort: 5000
-  type: LoadBalancer
+  type: ClusterIP
   sessionAffinity: None
