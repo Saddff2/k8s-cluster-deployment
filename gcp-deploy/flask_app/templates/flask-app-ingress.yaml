@@ -3,9 +3,8 @@ kind: Ingress
 metadata:
   name: flask-app-ingress
   namespace: flask-app
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
 spec:
+  ingressClassName: nginx
   rules:
     - host: daniel.local
       http:
