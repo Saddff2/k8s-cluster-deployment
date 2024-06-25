@@ -6,8 +6,8 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: daniel.local
-      http:
+    #- host: daniel.local
+    - http:
         paths:
           - path: /argocd
             pathType: Prefix
@@ -15,4 +15,4 @@ spec:
               service:
                 name: argocd-server
                 port:
-                  number: 443
+                  number: 80
