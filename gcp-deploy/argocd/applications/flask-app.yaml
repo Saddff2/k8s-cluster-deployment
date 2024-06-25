@@ -11,7 +11,7 @@ spec:
     namespace: flask-app
   source:
     repoURL: "git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/infrastructure.git"
-    path: "helm_charts/flask_app"
+    path: "gcp-deploy/flask_app"
     targetRevision: dev
     helm:
       valueFiles:
