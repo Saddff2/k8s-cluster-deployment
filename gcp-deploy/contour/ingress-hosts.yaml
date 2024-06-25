@@ -1,0 +1,52 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: multi-namespace-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: daniel.local
+      http:
+        paths:
+          - path: /flask
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-service
+                namespace: flask-app
+                port:
+                  number: 5006
+          - path: /jenkins
+            pathType: Prefix
+            backend:
+              service:
+                name: jenkins
+                namespace: jenkins
+                port:
+                  number: 8080
+          - path: /grafana
+            pathType: Prefix
+            backend:
+              service:
+                name: kube-prometheus-stack-grafana
+                namespace: kube-prometheus-stack
+                port:
+                  number: 80
+          - path: /prometheus
+            pathType: Prefix
+            backend:
+              service:
+                name: kube-prometheus-stack-prometheus
+                namespace: kube-prometheus-stack
+                port:
+                  number: 9090
+          - path: /argocd
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                namespace: argocd
+                port:
+                  number: 443
