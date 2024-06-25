@@ -17,7 +17,7 @@ spec:
                 name: flask-service
                 namespace: flask-app
                 port:
-                  number: 5006
+                  number: 5000
           - path: /jenkins
             pathType: Prefix
             backend:
