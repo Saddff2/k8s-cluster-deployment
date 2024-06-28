@@ -64,7 +64,7 @@ spec:
                 }
             }
         }
-        sstage('Test Docker Image') {
+        stage('Test Docker Image') {
             steps {
                 container('dind') {
                     script {
