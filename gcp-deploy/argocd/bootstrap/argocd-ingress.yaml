@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: www.tsorefdaniel.me
+    - host: tsorefdaniel.me
       http:
         paths:
           - path: /argocd
