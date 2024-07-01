@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: flask
+  name: ingress-traefik
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,8 +10,8 @@ spec:
     name: in-cluster
     namespace: flask-app
   source:
-    repoURL: "git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/application.git"
-    path: "flask_app"
+    repoURL: "git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/infrastructure.git"
+    path: "gcp-deploy/traefik"
     targetRevision: dev
     helm:
       valueFiles:

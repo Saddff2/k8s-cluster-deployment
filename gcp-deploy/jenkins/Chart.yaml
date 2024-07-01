@@ -19,32 +19,31 @@ annotations:
       url: https://github.com/jenkinsci/helm-charts/issues
 apiVersion: v2
 appVersion: 2.452.2
-description:
-  "Jenkins - Build great things at any scale! As the leading open source
+description: 'Jenkins - Build great things at any scale! As the leading open source
   automation server, Jenkins provides over 1800 plugins to support building, deploying
-  and automating any project. "
+  and automating any project. '
 home: https://www.jenkins.io/
 icon: https://get.jenkins.io/art/jenkins-logo/logo.svg
 keywords:
-  - jenkins
-  - ci
-  - devops
+- jenkins
+- ci
+- devops
 maintainers:
-  - email: maor.friedman@redhat.com
-    name: maorfr
-  - email: mail@torstenwalter.de
-    name: torstenwalter
-  - email: garridomota@gmail.com
-    name: mogaal
-  - email: wmcdona89@gmail.com
-    name: wmcdona89
-  - email: timjacomb1@gmail.com
-    name: timja
+- email: maor.friedman@redhat.com
+  name: maorfr
+- email: mail@torstenwalter.de
+  name: torstenwalter
+- email: garridomota@gmail.com
+  name: mogaal
+- email: wmcdona89@gmail.com
+  name: wmcdona89
+- email: timjacomb1@gmail.com
+  name: timja
 name: jenkins
 sources:
-  - https://github.com/jenkinsci/jenkins
-  - https://github.com/jenkinsci/docker-inbound-agent
-  - https://github.com/maorfr/kube-tasks
-  - https://github.com/jenkinsci/configuration-as-code-plugin
+- https://github.com/jenkinsci/jenkins
+- https://github.com/jenkinsci/docker-inbound-agent
+- https://github.com/maorfr/kube-tasks
+- https://github.com/jenkinsci/configuration-as-code-plugin
 type: application
 version: 5.3.1
