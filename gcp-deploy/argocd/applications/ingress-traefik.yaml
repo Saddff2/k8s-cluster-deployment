@@ -8,7 +8,7 @@ metadata:
 spec:
   destination:
     name: in-cluster
-    namespace: flask-app
+    namespace: ingress-traefik
   source:
     repoURL: "git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/infrastructure.git"
     path: "gcp-deploy/traefik"
