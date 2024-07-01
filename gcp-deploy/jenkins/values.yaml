@@ -916,7 +916,7 @@ agent:
     # -- Repository to pull the agent jnlp image from
     repository: "drpsychick/dind-buildx-helm"
     # -- Tag of the image to pull
-    tag: "v1.20.4"
+    tag: "latest"
   # -- Configure working directory for default agent
   workingDir: "/home/jenkins/agent"
   nodeUsageMode: "NORMAL"
