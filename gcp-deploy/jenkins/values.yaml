@@ -897,15 +897,15 @@ agent:
   # -- Overrides the Kubernetes Jenkins tunnel
   jenkinsTunnel:
   # -- The connection timeout in seconds for connections to Kubernetes API. The minimum value is 5
-  kubernetesConnectTimeout: 5
+  kubernetesConnectTimeout: 15
   # -- The read timeout in seconds for connections to Kubernetes API. The minimum value is 15
-  kubernetesReadTimeout: 15
+  kubernetesReadTimeout: 30
   # -- The maximum concurrent connections to Kubernetes API
   maxRequestsPerHostStr: "32"
   # -- Time in minutes after which the Kubernetes cloud plugin will clean up an idle worker that has not already terminated
-  retentionTimeout: 5
+  retentionTimeout: 1
   # -- Seconds to wait for pod to be running
-  waitForPodSec: 600
+  waitForPodSec: 240
   # -- Namespace in which the Kubernetes agents should be launched
   namespace:
   # -- Custom Pod labels (an object with `label-key: label-value` pairs)
@@ -956,7 +956,7 @@ agent:
 
   # You may want to change this to true while testing a new image
   # -- Always pull agent container image before build
-  alwaysPullImage: false
+  alwaysPullImage: true
   # When using Pod Security Admission in the Agents namespace with the restricted Pod Security Standard,
   # the jnlp container cannot be scheduled without overriding its container definition with a securityContext.
   # This option allows to automatically inject in the jnlp container a securityContext
@@ -965,7 +965,7 @@ agent:
   restrictedPssSecurityContext: false
   # Controls how agent pods are retained after the Jenkins build completes
   # Possible values: Always, Never, OnFailure
-  podRetention: "Never"
+  podRetention: "Always"
   # Disable if you do not want the Yaml the agent pod template to show up
   # in the job Console Output. This can be helpful for either security reasons
   # or simply to clean up the output to make it easier to read.
