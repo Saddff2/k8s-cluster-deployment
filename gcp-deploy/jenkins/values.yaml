@@ -914,9 +914,9 @@ agent:
   jnlpregistry:
   image:
     # -- Repository to pull the agent jnlp image from
-    repository: "drpsychick/dind-buildx-helm"
+    repository: "docker"
     # -- Tag of the image to pull
-    tag: "latest"
+    tag: "dind"
   # -- Configure working directory for default agent
   workingDir: "/home/jenkins/agent"
   nodeUsageMode: "NORMAL"
