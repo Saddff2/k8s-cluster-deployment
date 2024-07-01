@@ -4,9 +4,9 @@ metadata:
   name: jenkins-ingress
   namespace: jenkins
 spec:
-  ingressClassName: ingress-traefik
+  ingressClassName: nginx
   rules:
-    - host: www.tsorefdaniel.me
+    - host: tsorefdaniel.me
       http:
         paths:
           - path: /jenkins

@@ -4,9 +4,9 @@ metadata:
   name: grafana-ingress
   namespace: kube-prometheus-stack
 spec:
-  ingressClassName: ingress-traefik
+  ingressClassName: nginx
   rules:
-    - host: www.tsorefdaniel.me
+    - host: tsorefdaniel.me
       http:
         paths:
           - path: /grafana
