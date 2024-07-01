@@ -1,89 +1,10 @@
-Detailed Example: Jenkins YAML Configuration
-If you prefer to deploy Jenkins using Kubernetes manifests instead of Helm, here's an example of how you might configure Jenkins using YAML:
+helm repo add jenkins https://charts.jenkins.io
+helm repo update
 
-Create a Persistent Volume Claim (PVC) for Jenkins:
-yaml
-Copy code
-# jenkins-pvc.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: jenkins-pvc
-  namespace: jenkins
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-Create a Jenkins Deployment:
-yaml
-Copy code
-# jenkins-deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: jenkins
-  namespace: jenkins
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: jenkins
-  template:
-    metadata:
-      labels:
-        app: jenkins
-    spec:
-      containers:
-      - name: jenkins
-        image: jenkins/jenkins:lts
-        ports:
-        - containerPort: 8080
-        - containerPort: 50000
-        volumeMounts:
-        - name: jenkins-home
-          mountPath: /var/jenkins_home
-      volumes:
-      - name: jenkins-home
-        persistentVolumeClaim:
-          claimName: jenkins-pvc
-Create a Jenkins Service:
-yaml
-Copy code
-# jenkins-service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: jenkins
-  namespace: jenkins
-spec:
-  ports:
-  - name: http
-    port: 8080
-    targetPort: 8080
-  - name: agent
-    port: 50000
-    targetPort: 50000
-  selector:
-    app: jenkins
-  type: NodePort
-Apply the YAML configurations:
-sh
-Copy code
-kubectl create namespace jenkins
-kubectl apply -f jenkins-pvc.yaml
-kubectl apply -f jenkins-deployment.yaml
-kubectl apply -f jenkins-service.yaml
-Access Jenkins:
-sh
-Copy code
-kubectl --namespace jenkins port-forward svc/jenkins 8080:8080
-Visit http://localhost:8080 in your web browser to access Jenkins.
+helm pull jenkins/jenkins --untar install
 
-Conclusion
-This guide provides a comprehensive approach to running Jenkins on a local Kubernetes cluster using Minikube. By following these steps, you should have a functional Jenkins instance running on Kubernetes, ready for your continuous integration and continuous delivery (CI/CD) pipelines.
+kubectl port-forward svc/jenkins 8080:8080 -n jenkins
 
+kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
 
-
-
+Creating user
