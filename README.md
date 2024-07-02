@@ -44,4 +44,32 @@ This ensures proactive monitoring and alerting for any anomalies or performance 
 We can create specific dashboards to monitor the health and performance of our Flask application,  MongoDB databases, Kubernetes cluster utilization, Jenkins/GitLab CI pipelines, and ArgoCD deployments.  
 Grafana’s rich visualization capabilities enable us to gain insights into key metrics, track trends over time, and troubleshoot issues efficiently.
 
+
 ### Explanation of the Workflow
+
+
+
+### Cluster Configuration
+
+1.	**Setting up Kubernetes Cluster**:
+* Depending on your preference and environment, choose Google Kubernetes Engine (GKE), Minikube, Kind, Docker Desktop Kubernetes Engine, or use Terraform with Kubespray for deployment on bare metal or any cloud provider.
+
+2. **Install ArgoCD**
+* Install ArgoCD on your Kubernetes cluster. ArgoCD will serve as our GitOps continuous deployment tool, automating the deployment of Helm charts and Docker images based on changes to Git repositories.
+
+3. **Configure ArgoCD**
+* Setup connection to Git repositories using SSH key. Define repositories, Helm charts, and Docker images that ArgoCD will monitor and synchronize with the desired state.
+* Install root application, that serves as the central control point for managing our infrastructure and applications deployed on Kubernetes.  
+Its main role is to orchestrate the deployment of other applications defined in Git repositories, ensuring they are automatically deployed and synchronized to their desired state.
+
+4. **Configure Jenkins**  
+Helm Chart provided in this guide is set up to install all needed plugins for work. So only things to configure are:  
+* Create New Account
+* Create credentials for Docker and Gitlab
+* Make pipeline that points to Jenkinsfile in Gitlab repository
+
+5. 
+
+
+
+
