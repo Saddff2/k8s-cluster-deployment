@@ -10,4 +10,3 @@ Our you can use **Terraform** and **Kubespray** and deploy your cluster pretty e
 
 ## Overview of the Infrastucture
 
-
