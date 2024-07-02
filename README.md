@@ -6,6 +6,13 @@ We will use **ArgoCD** for automatic deployment of our **Helm Charts** and **Doc
 **Jenkins** and **GitLab** **CI** for **CI/CD** pipelines and **Grafana** + **Prometheus** stack for monitoring. 
 
 ## Contents
+- [Prerequisites](#prerequisites)
+- [Overview of the Infrastucture](#overview-of-the-infrastructure)
+  - [ArgoCD](#argocd)
+  - [Jenkins / Gitlab CI](#jenkins--gitlab-ci)
+  - [Grafana + Prometheus](#grafana--prometheus)
+- [Explanation of the Workflow](#explanation-of-the-workflow)
+  - [Continuous Integration (CI) with Jenkins and GitLab CI](#continuous-integration--ci--with-jenkins-and-gitLab-ci)
 
 
 ## Prerequisites
@@ -14,6 +21,7 @@ You also can use local clusters such as **Minikube**, **Kind**, or **Docker Desk
 Our you can use **Terraform** and **[Kubespray](https://github.com/kubernetes-sigs/kubespray)**  and deploy your cluster pretty easy on baremetal or any cloud.
 
 ## Overview of the Infrastucture
+
 
 <img src="images/Screenshot_2024-07-02_at_20.27.45.png" width="900">
 
@@ -45,8 +53,44 @@ We can create specific dashboards to monitor the health and performance of our F
 Grafana’s rich visualization capabilities enable us to gain insights into key metrics, track trends over time, and troubleshoot issues efficiently.
 
 
-## Explanation of the Workflow
+# Explanation of the Workflow
 
+## Continuous Integration (CI) with Jenkins and GitLab CI
+### Code Commit and Push
+
+* Developer Commits Code: A developer commits code changes to the GitLab repository.
+* GitLab CI Triggers: GitLab CI detects the code commit and triggers the CI pipeline.
+
+### Build and Test
+
+* Jenkins Pipeline Execution:
+* Clone Repository: Jenkins clones the repository from GitLab.
+* Get Build Time: Jenkins retrieves the current time to tag the Docker image.
+* Docker Login: Jenkins logs in to Docker Hub using credentials stored in Jenkins.
+* Build Docker Image: Jenkins builds the Docker image for the Flask application.
+* Test Docker Image: Jenkins runs tests on the newly built Docker image.
+
+### Update Helm Chart
+
+* Update Helm Chart:
+* Jenkins updates the Helm chart with the new Docker image version.
+* Push Helm Chart: Jenkins builds and pushes the updated Helm chart to the Helm repository.
+
+### Push Docker Image
+
+* Push Docker Image: Jenkins pushes the Docker image to Docker Hub.
+
+### Continuous Deployment (CD) with ArgoCD
+
+### Monitoring and Syncing
+
+* ArgoCD Monitors Repositories: ArgoCD continuously monitors the GitLab repository for changes to the Helm charts and configurations.
+* Detect Changes: When a new Docker image or Helm chart version is pushed, ArgoCD detects the changes.
+
+### Deployment
+
+* Sync with Desired State: ArgoCD syncs the Kubernetes cluster with the desired state defined in the GitLab repository.
+* Automated Deployment: ArgoCD deploys the updated Helm chart, which includes the new Docker image, to the Kubernetes cluster.
 
 
 ## Cluster Configuration
