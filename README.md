@@ -149,7 +149,7 @@ Password is ```4B6LzzwQUBFrhBKIi0e6Tu```
 * Create new user.
 **Manage Jenkins > Users > Create User** 
 
-* Logout from root user and access created one.
+* Logout from root user and access to created one.
 
 <img src="images/change-account-jenkins.png" width="700">
 
