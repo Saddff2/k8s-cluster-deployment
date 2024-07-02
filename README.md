@@ -101,7 +101,7 @@ Go to Settings > Repositories > Connect Repo
 
 Add your GitLab ssh private key to every repo.
 
-<img src="images/repos-connected" width="800">
+<img src="images/repos-connected.png" width="800">
 
 ### Root yaml
 
@@ -113,6 +113,6 @@ kubectl apply -f root.yaml
 
 **This will take approximately 5 minutes (for 3 nodes cluster with 2 vcpu and 4 vram) for all applications to start.**
 
-<img src="images/apps-running" width="800">
+<img src="images/apps-running.png" width="800">
 
 ### Access Grafana
