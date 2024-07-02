@@ -20,12 +20,9 @@ Our you can use **Terraform** and **[Kubespray](https://github.com/kubernetes-si
 ####  ArgoCD
 
 Continuing with our setup, we will leverage the capabilities of ArgoCD for continuous deployment and GitOps practices.  
-ArgoCD will automate the deployment of our Helm Charts and Docker images,  
-ensuring that our infrastructure stays in sync with our desired state defined in Git repositories.
-
+ArgoCD will automate the deployment of our Helm Charts and Docker images, ensuring that our infrastructure stays in sync with our desired state defined in Git repositories.
 It will continuously monitor our GitLab Repository for changes and sync them immediatly after changes.  
-It will not only monitor changes to our Flask Application,  
-but also to Jenkins, Grafana + Prometheus, and ArgoCD itself.
+It will not only monitor changes to our Flask Application, but also to Jenkins, Grafana + Prometheus, and ArgoCD itself.
 
 #### Jenkins / Gitlab CI
 
@@ -40,14 +37,11 @@ It will monitor changes in our GitLab repositories and trigger pipelines accordi
 
 The Grafana + Prometheus stack will provide comprehensive monitoring and observability for our Kubernetes cluster and applications.
 
-* Prometheus: Prometheus will collect metrics from Kubernetes components, including pods,  
-nodes, and services. It will also scrape metrics from our Flask application and MongoDB instances.  
+* Prometheus: Prometheus will collect metrics from Kubernetes components, including pods,  nodes, and services. It will also scrape metrics from our Flask application and MongoDB instances.  
 Prometheus supports flexible querying, allowing us to create custom alerts based on metrics thresholds and trends.  
 This ensures proactive monitoring and alerting for any anomalies or performance issues within our infrastructure.
 * Grafana: Grafana will visualize Prometheus metrics through customizable dashboards.  
-We can create specific dashboards to monitor the health and performance of our Flask application,  
-MongoDB databases, Kubernetes cluster utilization, Jenkins/GitLab CI pipelines,  
-and ArgoCD deployments. Grafana’s rich visualization capabilities enable us to gain insights into key metrics,  
-track trends over time, and troubleshoot issues efficiently.
+We can create specific dashboards to monitor the health and performance of our Flask application,  MongoDB databases, Kubernetes cluster utilization, Jenkins/GitLab CI pipelines, and ArgoCD deployments.  
+Grafana’s rich visualization capabilities enable us to gain insights into key metrics, track trends over time, and troubleshoot issues efficiently.
 
 ### Explanation of the Workflow
