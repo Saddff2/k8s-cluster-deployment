@@ -116,3 +116,208 @@ kubectl apply -f root.yaml
 <img src="images/apps-running.png" width="1100">
 
 ### Access Grafana
+
+To access the **Grafana** dashboard, you can use port forwarding:
+
+```
+kubectl port-forward --namespace kube-prometheus-stack svc/kube-prometheus-stack-grafana 3000:80
+```
+
+* Get your Grafana password
+
+```
+kubectl get secret --namespace kube-prometheus-stack grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+Login is ```admin```
+Password is  ```prom-operator```
+
+You can checkout already preinstalled dashboards for monitoring all of the cluster.
+
+
+### Configure Jenkins Pipeline
+
+Let's access Jenkins 
+
+```
+kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
+kubectl port-forward svc/jenkins 8080:8080 -n jenkins
+```
+
+Login is ```admin```
+Password is ```4B6LzzwQUBFrhBKIi0e6Tu```
+
+* Create new user.
+**Manage Jenkins > Users > Create User** 
+
+* Logout from root user and access created one.
+
+<img src="images/change-account-jenkins.png" width="700">
+
+Now we need to provide our **docker** and **gitlab** credentials
+
+I'm using Username and Password option, but instead of password I'll provide **GitLab Access Token**.
+
+**Add GitLab credentails**
+```
+Manage Jenkins > Credentials > (global) > Add Credentials
+Scope - Global
+Username - GitLab Username
+Password - GitLab Access Token
+ID - gitlab-cred
+Description - GitLab Credentials
+```
+
+**Add Docker credentials**  
+Here I will also use Dockerhub Access Token
+
+```
+Scope - Global
+Username - Docker Username
+Password - DockerHub Access Token
+ID - docker
+Description - Docker Credentials
+```
+
+**Let's create a pipeline that will build Docker Image and change Helm chart to New version**
+
+```
+Create a job > Pipeline 
+Skip all options until the **Pipeline**
+
+Pick `Pipeline script from SCM`
+SCM > Git
+Repository URL > GitLab Repository 
+Credentials > gitlab-cred
+
+Branch Specifier > */<branch> Provide path to Jenkinsfile
+```
+**And click _Save_**
+
+<img src="images/add-pipeline-scm.png" width="1000">
+
+**Now when you want to build new image and update it on the clutser you can simply run job**
+
+You can check **Jenkinsfile** under the **Spoiler** 
+<details>
+<summary>Jenkinsfile</summary>
+
+```yaml
+pipeline {
+    agent {
+        kubernetes {
+            label 'kuberagent'
+            defaultContainer 'jnlp'
+            yamlFile 'agent.yaml'
+        }
+    }
+    environment {
+        DOCKER_REGISTRY = 'docker.io'
+        DOCKER_IMAGE = 'saddff/flask_app'
+    }
+    stages {
+        stage('Clone repository') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Get Build Time') {
+            steps {
+                script {
+                    env.DOCKER_TAG = sh(script: 'date +%Y%m%d%H%M%S', returnStdout: true).trim()
+                }
+            }
+        }
+        stage('Docker Login') {
+            steps {
+                container('dind') {
+                    withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY'
+                    }
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                container('dind') {
+                    sh 'docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG .'
+                }
+            }
+        }
+        stage('Test Docker Image') {
+            steps {
+                container('dind') {
+                    script {
+                        sh 'docker run -d --rm -p 5000:5000 --name test-container $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG python test_app.py'
+                    }
+                }
+            }
+        }
+        stage('Update Helm Chart') {
+            steps {
+                container('dind') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'gitlab-cred', usernameVariable: 'GITLAB_USERNAME', passwordVariable: 'GITLAB_PASSWORD')]) {
+                            sh 'git config --global --add safe.directory /home/jenkins/agent/workspace/docker-pipeline'
+                            sh 'git config --global user.email "tsorefdaniel@gmail.com"'
+                            sh 'git config --global user.name "Autobot jenkins"'
+                            sh 'git checkout -b dev'
+                            sh 'sed -i "s/version:.*/version: $DOCKER_TAG/" flask_app/Chart.yaml'
+                            sh 'sed -i "s|image: docker.io/saddff/flask_app:.*|image: docker.io/saddff/flask_app:$DOCKER_TAG|g" flask_app/values.yaml'
+                            sh 'git add flask_app/Chart.yaml flask_app/values.yaml'
+                            sh 'git commit -m "Automatic version update to version $DOCKER_TAG"'
+                            sh 'git push https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@gitlab.com/sela-tracks/1099/students/saddff2/final-project/application.git dev'
+                        }
+                    }
+                }
+            }
+        }
+        stage('Build and Push Helm Chart') {
+            steps {
+                container('dind') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                            sh '''
+                            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+                            helm package flask_app
+                            helm push flask_app-${DOCKER_TAG}.tgz oci://registry-1.docker.io/saddff/
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                container('dind') {
+                    sh 'docker push $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG'
+                }
+            }
+        }
+    }
+}
+``` 
+</details>
+
+Also you can check **Dockerfile**
+
+<details>
+<summary>Dockerfile</summary>
+
+```Dockerfile
+FROM python:3.11.9-alpine
+
+WORKDIR /app
+
+COPY requirements.txt /app/requirements.txt
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /app
+
+CMD ["python", "main.py"]
+
+EXPOSE 5000
+```
+</details>
+
+
