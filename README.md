@@ -12,7 +12,31 @@ We will use **ArgoCD** for automatic deployment of our **Helm Charts** and **Doc
   - [Jenkins / Gitlab CI](#jenkins--gitlab-ci)
   - [Grafana + Prometheus](#grafana--prometheus)
 - [Explanation of the Workflow](#explanation-of-the-workflow)
-  - [Continuous Integration (CI) with Jenkins and GitLab CI](#continuous-integration--ci--with-jenkins-and-gitLab-ci)
+  - [Continuous Integration (CI) with Jenkins and GitLab CI](#continuous-integration-ci-with-jenkins-and-gitlab-ci)
+    - [Code Commit and Push](#code-commit-and-push)
+    - [Build and Test](#build-and-test)
+    - [Update Helm Chart](#update-helm-chart)
+    - [Push Docker Image](#push-docker-image)
+  - [Continuous Deployment (CD) with ArgoCD](#continuous-deployment-cd-with-argocd)
+    - [Monitoring and Syncing](#monitoring-and-syncing)
+    - [Deployment](#deployment)
+- [Cluster Configuration](#cluster-configuration)
+  - [Setting up Kubernetes Cluster](#setting-up-kubernetes-cluster)
+  - [Install ArgoCD](#install-argocd)
+  - [Configure ArgoCD](#configure-argocd)
+  - [Configure Jenkins](#configure-jenkins)
+- [Step-by-Step Installation Guide](#step-by-step-installation-guide)
+  - [Installing ArgoCD](#installing-argocd)
+  - [Access Grafana](#access-grafana)
+  - [Configure Jenkins Pipeline](#configure-jenkins-pipeline)
+- [Conclusion](#conclusion)
+- [Final Result](#final-result)
+- [Additional Resources](#additional-resources)
+- [Next Steps](#next-steps)
+  - [Ingress Configuration](#ingress-configuration)
+  - [Security and Scalability](#security-and-scalability)
+  - [Terraform and Kubespray](#terraform-and-kubespray)
+- [Thank You](#thank-you)
 
 
 ## Prerequisites
@@ -95,18 +119,18 @@ Grafana’s rich visualization capabilities enable us to gain insights into key 
 
 ## Cluster Configuration
 
-1.	**Setting up Kubernetes Cluster**:
+####	**Setting up Kubernetes Cluster**:
 * Depending on your preference and environment, choose Google Kubernetes Engine (GKE), Minikube, Kind, Docker Desktop Kubernetes Engine, or use Terraform with Kubespray for deployment on bare metal or any cloud provider.
 
-2. **Install ArgoCD**
+#### **Install ArgoCD**
 * Install ArgoCD on your Kubernetes cluster. ArgoCD will serve as our GitOps continuous deployment tool, automating the deployment of Helm charts and Docker images based on changes to Git repositories.
 
-3. **Configure ArgoCD**
+#### **Configure ArgoCD**
 * Setup connection to Git repositories using SSH key. Define repositories, Helm charts, and Docker images that ArgoCD will monitor and synchronize with the desired state.
 * Install root application, that serves as the central control point for managing our infrastructure and applications deployed on Kubernetes.  
 Its main role is to orchestrate the deployment of other applications defined in Git repositories, ensuring they are automatically deployed and synchronized to their desired state.
 
-4. **Configure Jenkins**  
+#### **Configure Jenkins**  
 Helm Chart provided in this guide is set up to install all needed plugins for work. So only things to configure are:  
 * Create New Account
 * Create credentials for Docker and Gitlab
@@ -364,4 +388,39 @@ EXPOSE 5000
 ```
 </details>
 
+## Conclusion
 
+Deploying and managing a Kubernetes cluster with automated CI/CD pipelines ensures that your infrastructure remains up-to-date and resilient.  
+By using ArgoCD for GitOps-based continuous deployment, Jenkins and GitLab CI for CI/CD pipelines, and Grafana + Prometheus for monitoring, we have established a robust and scalable setup.  
+This allows for streamlined code integration, automated testing, and deployment processes, along with comprehensive monitoring to maintain the health and performance of your applications and infrastructure.
+
+## Final Result
+
+By following this guide, you have successfully deployed a Kubernetes cluster that automates the deployment of a Flask application connected to MongoDB.  
+With ArgoCD, Jenkins, GitLab CI, Grafana, and Prometheus integrated, you have a comprehensive solution that ensures continuous integration, continuous deployment, and real-time monitoring of your infrastructure and applications.  
+This setup enhances efficiency, reduces manual intervention, and provides visibility into your system’s performance and health.
+
+## Additional Resources
+
+* [Kubernetes Documentation](https://kubernetes.io/docs/home/)
+* [ArgoCD Documentation](https://argo-cd.readthedocs.io/en/stable/)
+* [Jenkins Documentation](https://www.jenkins.io/doc/)
+* [Kubespray Documentation](https://kubespray.io/#/)
+
+## Next Steps
+
+### Ingress Configuration
+
+Set up an Ingress controller (like NGINX or Traefik) to manage external access to your services. Create Ingress resources to route traffic based on hostnames and paths, and configure TLS/SSL for secure communication.
+
+### Security and Scalability
+
+Implement Role-Based Access Control (RBAC) and network policies to enhance security. Configure the Horizontal Pod Autoscaler (HPA) and Cluster Autoscaler to automatically scale your applications and cluster based on resource needs.
+
+### Terraform and Kubespray 
+
+Develop a Terraform script to automate provisioning of Kubernetes cluster and use Kubespray for cluster deployment. Integrate Terraform and Kubespray for consistent infrastructure management.
+
+
+## Thank You
+Thank you for following along with this guide! I hope this has been helpful for your Kubernetes cluster deployment and management.  
