@@ -1,6 +1,6 @@
-kubectl create namespace argocd
+terraform init
 
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+terraform apply
 
 kubectl port-forward svc argocd-server 9101:80 -n argocd
 
