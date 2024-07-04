@@ -3,11 +3,15 @@
 This guide will explore a method for deploying and managing your **Kubernetes** cluster.   
 Specifically, we will focus on building our infrastructure around a **Flask** application connected to **MongoDB** as our main application.  
 We will use **ArgoCD** for automatic deployment of our **Helm Charts** and **Docker Images**,  
-**Jenkins** and **GitLab** **CI** for **CI/CD** pipelines and **Grafana** + **Prometheus** stack for monitoring. 
+**Jenkins** and **GitLab** **CI**/**GitHub Actions** for **CI/CD** pipelines and **Grafana** + **Prometheus** stack for monitoring. 
+
+>[!NOTE]
+> This project was created on GitLab, but moved to GitHub for convenience, GitLab CI pipeline was changed to GitHub Actions pipeline.
+
 
 ## Contents
 - [Prerequisites](#prerequisites)
-- [Overview of the Infrastucture](#overview-of-the-infrastructure)
+- [Overview of the Infrastucture](#overview-of-the-infrastucture)
   - [ArgoCD](#argocd)
   - [Jenkins / Gitlab CI](#jenkins--gitlab-ci)
   - [Grafana + Prometheus](#grafana--prometheus)
@@ -43,6 +47,7 @@ We will use **ArgoCD** for automatic deployment of our **Helm Charts** and **Doc
 I'm using  **Google Kubernetes Engine** (GKE) from Google Cloud Platform (GCP) as a provider for my cluster.  
 You also can use local clusters such as **Minikube**, **Kind**, or **Docker Desktop Kubernetes Engine**.  
 Our you can use **Terraform** and **[Kubespray](https://github.com/kubernetes-sigs/kubespray)**  and deploy your cluster pretty easy on baremetal or any cloud.
+
 
 ## Overview of the Infrastucture
 
