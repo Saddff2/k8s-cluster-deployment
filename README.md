@@ -6,7 +6,7 @@ We will use **ArgoCD** for automatic deployment of our **Helm Charts** and **Doc
 **Jenkins** and **GitLab** **CI**/**GitHub Actions** for **CI/CD** pipelines and **Grafana** + **Prometheus** stack for monitoring. 
 
 >[!NOTE]
-> This project was created on GitLab, but moved to GitHub for convenience, GitLab CI pipeline was changed to GitHub Actions pipeline.
+> This project was created on GitLab, but was moved to GitHub for convenience, GitLab CI pipeline was changed to GitHub Actions pipeline.
 
 
 
