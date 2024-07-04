@@ -10,9 +10,9 @@ spec:
     name: in-cluster
     namespace: flask-app
   source:
-    repoURL: "git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/application.git"
-    path: "flask_app"
-    targetRevision: dev
+    repoURL: "git@github.com:Saddff2/k8s-cluster-deployment.git"
+    path: "main_application/flask_app"
+    targetRevision: main
     helm:
       valueFiles:
         - values.yaml

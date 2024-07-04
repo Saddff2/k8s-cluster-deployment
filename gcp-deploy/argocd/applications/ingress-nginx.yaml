@@ -10,9 +10,9 @@ spec:
     name: in-cluster
     namespace: ingress-nginx
   source:
-    repoURL: "git@gitlab.com:sela-tracks/1099/students/saddff2/final-project/infrastructure.git"
+    repoURL: "git@github.com:Saddff2/k8s-cluster-deployment.git"
     path: "gcp-deploy/ingress-nginx"
-    targetRevision: dev
+    targetRevision: main
     helm:
       valueFiles:
         - values.yaml

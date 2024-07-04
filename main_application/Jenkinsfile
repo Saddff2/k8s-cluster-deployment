@@ -3,45 +3,7 @@ pipeline {
         kubernetes {
             label 'kuberagent'
             defaultContainer 'jnlp'
-            yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    app: jenkins-agent
-spec:
-  containers:
-  - name: jnlp
-    image: jenkins/inbound-agent:latest
-    args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
-    resources:
-      requests:
-        memory: "256Mi"
-        cpu: "100m"
-    volumeMounts:
-    - mountPath: "/home/jenkins/agent"
-      name: "workspace-volume"
-  - name: dind
-    image: drpsychick/dind-buildx-helm:latest
-    alwaysPull: true
-    securityContext:
-      privileged: true
-    env:
-    - name: DOCKER_TLS_CERTDIR
-      value: ""
-    - name: DOCKER_CGROUPS
-      value: "true"
-    volumeMounts:
-    - mountPath: /var/lib/docker
-      name: dind-storage
-    - mountPath: "/home/jenkins/agent"
-      name: "workspace-volume"
-  volumes:
-  - emptyDir: {}
-    name: dind-storage
-  - emptyDir: {}
-    name: workspace-volume
-"""
+            yamlFile 'agent.yaml'
         }
     }
     environment {
@@ -99,7 +61,7 @@ spec:
                             sh 'sed -i "s|image: docker.io/saddff/flask_app:.*|image: docker.io/saddff/flask_app:$DOCKER_TAG|g" flask_app/values.yaml'
                             sh 'git add flask_app/Chart.yaml flask_app/values.yaml'
                             sh 'git commit -m "Automatic version update to version $DOCKER_TAG"'
-                            sh 'git push https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@gitlab.com/sela-tracks/1099/students/saddff2/final-project/application.git dev'
+                            sh 'git push https://${GIT_USERNAME}:${GIT_PASSWORD}@git@github.com:Saddff2/k8s-cluster-deployment.git dev'
                         }
                     }
                 }
