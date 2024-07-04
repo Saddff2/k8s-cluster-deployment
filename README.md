@@ -1,9 +1,10 @@
 # Kubernetes Cluster Deployment 
 
-This guide will explore a method for deploying and managing your **Kubernetes** cluster.   
-Specifically, we will focus on building our infrastructure around a **Flask** application connected to **MongoDB** as our main application.  
-We will use **ArgoCD** for automatic deployment of our **Helm Charts** and **Docker Images**,  
-**Jenkins** and **GitLab** **CI**/**GitHub Actions** for **CI/CD** pipelines and **Grafana** + **Prometheus** stack for monitoring. 
+This guide outlines a method for deploying and managing a **Kubernetes** cluster, focusing on an infrastructure centered around a **Flask** application connected to **MongoDB**. 
+We will utilize the following tools:
+- **ArgoCD**: Automates the deployment of **Helm Charts** and **Docker Images**.
+- **Jenkins** and **GitLab CI/GitHub Actions**: Implements **CI/CD** pipelines.
+- **Grafana** and **Prometheus**: Provides monitoring and observability for the cluster.
 
 >[!NOTE]
 > This project was created on GitLab, but was moved to GitHub for convenience, GitLab CI pipeline was changed to GitHub Actions pipeline.
