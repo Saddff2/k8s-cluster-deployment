@@ -1,0 +1,131 @@
+pipeline {
+    agent {
+        kubernetes {
+            label 'kuberagent'
+            defaultContainer 'jnlp'
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: jenkins-agent
+spec:
+  containers:
+  - name: jnlp
+    image: jenkins/inbound-agent:latest
+    args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+    volumeMounts:
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+  - name: dind
+    image: drpsychick/dind-buildx-helm:latest
+    alwaysPull: true
+    securityContext:
+      privileged: true
+    env:
+    - name: DOCKER_TLS_CERTDIR
+      value: ""
+    - name: DOCKER_CGROUPS
+      value: "true"
+    volumeMounts:
+    - mountPath: /var/lib/docker
+      name: dind-storage
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+  volumes:
+  - emptyDir: {}
+    name: dind-storage
+  - emptyDir: {}
+    name: workspace-volume
+"""
+        }
+    }
+    environment {
+        DOCKER_REGISTRY = 'docker.io'
+        DOCKER_IMAGE = 'saddff/flask_app'
+    }
+    stages {
+        stage('Clone repository') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Get Build Time') {
+            steps {
+                script {
+                    env.DOCKER_TAG = sh(script: 'date +%Y%m%d%H%M%S', returnStdout: true).trim()
+                }
+            }
+        }
+        stage('Docker Login') {
+            steps {
+                container('dind') {
+                    withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY'
+                    }
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                container('dind') {
+                    sh 'docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG .'
+                }
+            }
+        }
+        stage('Test Docker Image') {
+            steps {
+                container('dind') {
+                    script {
+                        sh 'docker run -d --rm -p 5000:5000 --name test-container $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG python test_app.py'
+                    }
+                }
+            }
+        }
+        stage('Update Helm Chart') {
+            steps {
+                container('dind') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'gitlab-cred', usernameVariable: 'GITLAB_USERNAME', passwordVariable: 'GITLAB_PASSWORD')]) {
+                            sh 'git config --global --add safe.directory /home/jenkins/agent/workspace/docker-pipeline'
+                            sh 'git config --global user.email "tsorefdaniel@gmail.com"'
+                            sh 'git config --global user.name "Autobot jenkins"'
+                            sh 'git checkout -b dev'
+                            sh 'sed -i "s/version:.*/version: $DOCKER_TAG/" flask_app/Chart.yaml'
+                            sh 'sed -i "s|image: docker.io/saddff/flask_app:.*|image: docker.io/saddff/flask_app:$DOCKER_TAG|g" flask_app/values.yaml'
+                            sh 'git add flask_app/Chart.yaml flask_app/values.yaml'
+                            sh 'git commit -m "Automatic version update to version $DOCKER_TAG"'
+                            sh 'git push https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@gitlab.com/sela-tracks/1099/students/saddff2/final-project/application.git dev'
+                        }
+                    }
+                }
+            }
+        }
+        stage('Build and Push Helm Chart') {
+            steps {
+                container('dind') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                            sh '''
+                            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+                            helm package flask_app
+                            helm push flask_app-${DOCKER_TAG}.tgz oci://registry-1.docker.io/saddff/
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                container('dind') {
+                    sh 'docker push $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG'
+                }
+            }
+        }
+    }
+}

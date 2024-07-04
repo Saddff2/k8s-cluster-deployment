@@ -1,0 +1,11 @@
+flask:
+  replicaCount: 3
+  image: docker.io/saddff/flask_app:20240703072109
+  namespace: flask-app
+  mongouri: mongodb://mongo:27017/dinner_suggestions
+
+mongo:
+  image: mongo:latest
+  name: mongo
+  mongodb_login: root
+  mongodb_password: example

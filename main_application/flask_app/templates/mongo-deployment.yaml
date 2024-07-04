@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.mongo.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  serviceName: {{ .Values.mongo.name }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.mongo.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.mongo.name }}
+    spec:
+      containers:
+        - name: {{ .Values.mongo.name }}
+          image: {{ .Values.mongo.image }}
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: {{ .Values.mongo.mongodb_login }}
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: {{ .Values.mongo.mongodb_password }}
+          volumeMounts:
+            - name: {{ .Values.mongo.name }}-data
+              mountPath: /data/db
+      volumes:
+        - name: {{ .Values.mongo.name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.mongo.name }}-pv-claim
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.mongo.name }}-pv-claim
+        namespace: {{ .Release.Namespace }}
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complex Dinner Suggestion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            padding: 20px;
+            background: #007BFF;
+            color: #fff;
+            border-radius: 8px;
+            position: fixed;
+            top: 1;
+            bottom: 1;
+            left: 0;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .content-wrapper {
+            margin-left: 220px;
+            /* Adjust this value based on sidebar width + margin */
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #007BFF;
+            text-align: center;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: #e9ecef;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .suggestion {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        function refreshSuggestion() {
+            fetch('/refresh')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('main-dish').innerText = data.main;
+                    document.getElementById('side-dish').innerText = data.side;
+                    document.getElementById('dessert').innerText = data.dessert;
+                });
+        }
+
+        function showLast5() {
+            fetch('/last5')
+                .then(response => response.json())
+                .then(data => {
+                    const last5List = document.getElementById('last5-suggestions');
+                    last5List.innerHTML = ''; // Clear previous suggestions
+                    data.forEach(item => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<strong>Main:</strong> ${item.main}, <strong>Side:</strong> ${item.side}, <strong>Dessert:</strong> ${item.dessert}`;
+                        last5List.appendChild(listItem);
+                    });
+                });
+        }
+
+        function showAllSuggestions() {
+            fetch('/all_suggestions')
+                .then(response => response.json())
+                .then(data => {
+                    const allSuggestionsList = document.getElementById('all-suggestions');
+                    allSuggestionsList.innerHTML = ''; // Clear previous suggestions
+                    data.forEach(item => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<strong>Main:</strong> ${item.main}, <strong>Side:</strong> ${item.side}, <strong>Dessert:</strong> ${item.dessert}, <strong>Time:</strong> ${new Date(item.timestamp).toLocaleString()}`;
+                        allSuggestionsList.appendChild(listItem);
+                    });
+                });
+        }
+
+        function showWeekSuggestions() {
+            fetch('/week_suggestions')
+                .then(response => response.json())
+                .then(data => {
+                    const weekSuggestionsList = document.getElementById('week-suggestions');
+                    weekSuggestionsList.innerHTML = ''; // Clear previous suggestions
+                    data.forEach((item, index) => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<strong>Day ${index + 1}:</strong> Main: ${item.main}, Side: ${item.side}, Dessert: ${item.dessert}`;
+                        weekSuggestionsList.appendChild(listItem);
+                    });
+                });
+        }
+
+        function showLast30() {
+            fetch('/last30')
+                .then(response => response.json())
+                .then(data => {
+                    const last30List = document.getElementById('last30-suggestions');
+                    last30List.innerHTML = ''; // Clear previous suggestions
+                    data.forEach(item => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<strong>Main:</strong> ${item.main}, <strong>Side:</strong> ${item.side}, <strong>Dessert:</strong> ${item.dessert}, <strong>Time:</strong> ${new Date(item.timestamp).toLocaleString()}`;
+                        last30List.appendChild(listItem);
+                    });
+                });
+        }
+
+        // Live Dish Counter
+        function updateDishCount() {
+            fetch('/dish_count')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('dish-count').innerText = data.count;
+                })
+                .catch(error => {
+                    console.error('Error fetching dish count:', error);
+                });
+        }
+
+        // Call the update function initially and then every 1 second
+        updateDishCount();
+        setInterval(updateDishCount, 500); 
+    </script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Pod Info</h2>
+        <p><strong>UUID:</strong> {{ info.uuid }}</p>
+        <p><strong>Hostname:</strong> {{ info.hostname }}</p>
+        <p><strong>DateTime:</strong> {{ info.datetime }}</p>
+    </div>
+    <div class="content-wrapper">
+        <div class="container">
+            <h1>Complex Dinner Suggestion</h1>
+            <p><strong>Main Dish:</strong> <span id="main-dish">{{ main }}</span></p>
+            <p><strong>Side Dish:</strong> <span id="side-dish">{{ side }}</span></p>
+            <p><strong>Dessert:</strong> <span id="dessert">{{ dessert }}</span></p>
+            <p><strong>All Saved Dishes in Database:</strong> <span id="dish-count">{{ dish_count }}</span></p>
+
+            <div class="button-container">
+                <button onclick="refreshSuggestion()">Get New Suggestion</button>
+                <button onclick="showLast5()">Show Last 5 Suggestions</button>
+                <button onclick="showAllSuggestions()">Show All Suggestions</button>
+                <button onclick="showWeekSuggestions()">Generate Week Suggestions</button>
+                <button onclick="showLast30()">Show Last 30 Suggestions</button>
+            </div>
+
+            <h2>Last 5 Dinner Suggestions</h2>
+            <ul id="last5-suggestions"></ul>
+
+            <h2>Week Suggestions</h2>
+            <ul id="week-suggestions"></ul>
+
+            <h2>Last 30 Dinner Suggestions</h2>
+            <ul id="last30-suggestions"></ul>
+
+            <h2>All Dinner Suggestions</h2>
+            <ul id="all-suggestions"></ul>
+        </div>
+    </div>
+</body>
+
+</html>
