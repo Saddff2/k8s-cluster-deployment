@@ -11,7 +11,7 @@ We will use **ArgoCD** for automatic deployment of our **Helm Charts** and **Doc
 
 ## Contents
 - [Prerequisites](#prerequisites)
-- [Overview of the Infrastucture](#overview-of-the-infrastucture)
+- [Overview of the Infrastructure](#overview-of-the-infrastructure)
   - [ArgoCD](#argocd)
   - [Jenkins / Gitlab CI](#jenkins--gitlab-ci)
   - [Grafana + Prometheus](#grafana--prometheus)
@@ -49,7 +49,7 @@ You also can use local clusters such as **Minikube**, **Kind**, or **Docker Desk
 Our you can use **Terraform** and **[Kubespray](https://github.com/kubernetes-sigs/kubespray)**  and deploy your cluster pretty easy on baremetal or any cloud.
 
 
-## Overview of the Infrastucture
+## Overview of the Infrastructure
 
 
 <img src="images/Screenshot_2024-07-02_at_20.27.45.png" width="900">
