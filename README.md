@@ -207,7 +207,7 @@ You can checkout already preinstalled dashboards for monitoring all of the clust
 Let's access Jenkins 
 
 ```
-kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
+kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode ; echo
 kubectl port-forward svc/jenkins 8080:8080 -n jenkins
 ```
 
