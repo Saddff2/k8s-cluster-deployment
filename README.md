@@ -8,7 +8,7 @@ We will use **ArgoCD** for automatic deployment of our **Helm Charts** and **Doc
 >[!NOTE]
 > This project was created on GitLab, but moved to GitHub for convenience, GitLab CI pipeline was changed to GitHub Actions pipeline.
 
-- [Flask Application Overview](main_application/README.md)
+- [Flask Application Overview](main_application)
 
 ## Contents
 - [Prerequisites](#prerequisites)
