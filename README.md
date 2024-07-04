@@ -8,11 +8,12 @@ We will use **ArgoCD** for automatic deployment of our **Helm Charts** and **Doc
 >[!NOTE]
 > This project was created on GitLab, but moved to GitHub for convenience, GitLab CI pipeline was changed to GitHub Actions pipeline.
 
-- [Flask Application Overview](main_application)
+
 
 ## Contents
 - [Prerequisites](#prerequisites)
 - [Overview of the Infrastructure](#overview-of-the-infrastructure)
+  - [Flask Application Overview](main_application)
   - [ArgoCD](#argocd)
   - [Jenkins / Gitlab CI](#jenkins--gitlab-ci)
   - [Grafana + Prometheus](#grafana--prometheus)
@@ -52,8 +53,11 @@ Our you can use **Terraform** and **[Kubespray](https://github.com/kubernetes-si
 
 ## Overview of the Infrastructure
 
-
 <img src="images/Screenshot_2024-07-02_at_20.27.45.png" width="900">
+
+### Flask Application Overview
+
+[This will take you to detailed Flask Application overview](main_application)
 
 ###  ArgoCD
 
